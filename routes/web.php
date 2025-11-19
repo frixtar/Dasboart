@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('dashboard');
 });
-
+Route::resource('products', ProductController::class);
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard
@@ -17,7 +17,7 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard'); 
     })->name('dashboard');
 
-    // 📌 Rutas del Perfil (necesarias para profile.edit)
+    //Rutas del Perfil (necesarias para profile.edit)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -30,4 +30,8 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/kpis', function () {
     return view('kpis.index');
 })->name('kpis.index');
+Route::middleware(['auth'])->group(function () {
+    Route::resource('products', ProductController::class);
+});
+
 require __DIR__.'/auth.php';
