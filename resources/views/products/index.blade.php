@@ -1,64 +1,53 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            {{ __('Productos / Autos') }}
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Lista de Productos') }}
         </h2>
     </x-slot>
 
-    <div class="py-8">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="mb-4 flex justify-end">
-                <a href="{{ route('products.create') }}"
-                   class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition">
-                    + Agregar Auto
-                </a>
-            </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    
+                    <div class="mb-4">
+                        <a href="{{ route('products.create') }}" class="bg-blue-700 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                            + Nuevo Producto
+                        </a>
+                    </div>
 
-            <div class="overflow-hidden rounded-lg bg-white shadow">
-                <table class="min-w-full text-left text-sm">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-6 py-3">Marca</th>
-                            <th class="px-6 py-3">Modelo</th>
-                            <th class="px-6 py-3">Año</th>
-                            <th class="px-6 py-3">Precio</th>
-                            <th class="px-6 py-3">Estado</th>
-                            <th class="px-6 py-3 text-right">Acciones</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($products as $product)
-                            <tr class="border-t hover:bg-gray-50 transition">
-                                <td class="px-6 py-4">{{ $product->brand }}</td>
-                                <td class="px-6 py-4">{{ $product->model }}</td>
-                                <td class="px-6 py-4">{{ $product->year }}</td>
-                                <td class="px-6 py-4">${{ number_format($product->price, 2) }}</td>
-                                <td class="px-6 py-4">{{ $product->status }}</td>
-                                <td class="px-6 py-4 text-right space-x-2">
-                                    <a href="{{ route('products.edit', $product->id) }}"
-                                       class="text-blue-600 hover:text-blue-800">
-                                        ✏️
-                                    </a>
-
-                                    <form action="{{ route('products.destroy', $product->id) }}"
-                                          method="POST"
-                                          class="inline">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach ($products as $product)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $product->barcode }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $product->name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${{ number_format($product->price, 2) }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $product->stock }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="{{ route('products.edit', $product->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Editar</a>
+                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-
-                                        <button type="submit"
-                                                onclick="return confirm('¿Eliminar este producto?')"
-                                                class="text-red-600 hover:text-red-800">
-                                            🗑️
-                                        </button>
+                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</button>
                                     </form>
                                 </td>
+                                    
                             </tr>
-                        @endforeach
-                    </tbody>
+                            @endforeach
+                        </tbody>
+                    </table>
 
-                </table>
+                </div>
             </div>
         </div>
     </div>

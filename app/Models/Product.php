@@ -10,17 +10,10 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'brand',
-        'model',
-        'year',
-        'vin',
-        'plate',
-        'color',
-        'mileage',
+        'barcode',
+        'name',
         'price',
-        'cost',
-        'status',
-        'description',
-        'image',
+        'stock',
+        'has_iva',
     ];
 }

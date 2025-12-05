@@ -35,43 +35,11 @@
         </svg>
         {{ __('Productos') }}
     </x-nav-link>
-
-    <!-- Clientes -->
-    <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')" class="flex items-center gap-2 transition-all duration-200 hover:scale-105">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 20h5v-2a4 4 0 00-4-4h-1" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 20H4v-2a4 4 0 014-4h1" />
-            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
-            <circle cx="17" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
-        </svg>
-        {{ __('Clientes') }}
-    </x-nav-link>
-
-    <!-- Ventas -->
-    <x-nav-link :href="route('sales.index')" :active="request()->routeIs('sales.*')" class="flex items-center gap-2 transition-all duration-200 hover:scale-105">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 3h18v4H3zM3 9h18v12H3z" />
-        </svg>
-        {{ __('Ventas') }}
-    </x-nav-link>
-
-    <!-- KPIs -->
-<x-nav-link :href="route('kpis.index')" :active="request()->routeIs('kpis.*')">
-    <span class="flex items-center gap-2 group">
-
-        <!-- Icono KPIs -->
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="w-5 h-5 transition-all duration-200 group-hover:scale-110 group-hover:-rotate-3"
-             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 6v14h16M8 14l2 2 4-4 4 4" />
-        </svg>
-
-        {{ __('KPIs') }}
-    </span>
+    <x-nav-link :href="route('cashiers.index')" :active="request()->routeIs('cashiers.*')" class="flex items-center gap-2 transition-all duration-200 hover:scale-105">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+    </svg>
+    {{ __('Cajeros') }}
 </x-nav-link>
 </div>
             </div>

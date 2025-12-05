@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold text-gray-800">
-            Editar Auto
+            Editar Producto: {{ $product->name }}
         </h2>
     </x-slot>
 
@@ -9,95 +9,51 @@
         <div class="mx-auto max-w-3xl sm:px-6 lg:px-8">
             <div class="rounded-lg bg-white p-6 shadow">
 
-                <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('products.update', $product->id) }}" method="POST">
                     @csrf
-                    @method('PUT')
-
-                    <div class="grid grid-cols-2 gap-4">
+                    @method('PUT') <div class="grid grid-cols-2 gap-4">
 
                         <div>
-                            <label>Marca</label>
-                            <input type="text" name="brand" value="{{ $product->brand }}"
-                                   class="w-full rounded border-gray-300" required>
+                            <label class="font-bold text-gray-700">Código de Barras</label>
+                            <input type="text" name="barcode" value="{{ old('barcode', $product->barcode) }}"
+                                   class="w-full rounded border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
+                            @error('barcode') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label>Modelo</label>
-                            <input type="text" name="model" value="{{ $product->model }}"
-                                   class="w-full rounded border-gray-300" required>
+                            <label class="font-bold text-gray-700">Nombre del Producto</label>
+                            <input type="text" name="name" value="{{ old('name', $product->name) }}"
+                                   class="w-full rounded border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
                         </div>
 
                         <div>
-                            <label>Año</label>
-                            <input type="number" name="year" value="{{ $product->year }}"
-                                   class="w-full rounded border-gray-300">
+                            <label class="font-bold text-gray-700">Precio Venta ($)</label>
+                            <input type="number" step="0.01" name="price" value="{{ old('price', $product->price) }}"
+                                   class="w-full rounded border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
                         </div>
 
                         <div>
-                            <label>VIN</label>
-                            <input type="text" name="vin" value="{{ $product->vin }}"
-                                   class="w-full rounded border-gray-300">
+                            <label class="font-bold text-gray-700">Stock Actual</label>
+                            <input type="number" name="stock" value="{{ old('stock', $product->stock) }}"
+                                   class="w-full rounded border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" required>
                         </div>
 
-                        <div>
-                            <label>Placas</label>
-                            <input type="text" name="plate" value="{{ $product->plate }}"
-                                   class="w-full rounded border-gray-300">
+                        <div class="col-span-2 mt-2">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="has_iva" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                {{ $product->has_iva ? 'checked' : '' }}>
+                                <span class="ml-2 text-gray-700">Este producto incluye IVA</span>
+                            </label>
                         </div>
 
-                        <div>
-                            <label>Color</label>
-                            <input type="text" name="color" value="{{ $product->color }}"
-                                   class="w-full rounded border-gray-300">
-                        </div>
-
-                        <div>
-                            <label>Kilometraje</label>
-                            <input type="number" name="mileage" value="{{ $product->mileage }}"
-                                   class="w-full rounded border-gray-300">
-                        </div>
-
-                        <div>
-                            <label>Precio</label>
-                            <input type="number" name="price" value="{{ $product->price }}"
-                                   class="w-full rounded border-gray-300">
-                        </div>
-
-                        <div>
-                            <label>Costo</label>
-                            <input type="number" name="cost" value="{{ $product->cost }}"
-                                   class="w-full rounded border-gray-300">
-                        </div>
-
-                        <div>
-                            <label>Estado</label>
-                            <select name="status" class="w-full rounded border-gray-300">
-                                <option {{ $product->status == 'Disponible' ? 'selected' : '' }}>Disponible</option>
-                                <option {{ $product->status == 'Vendido' ? 'selected' : '' }}>Vendido</option>
-                                <option {{ $product->status == 'Apartado' ? 'selected' : '' }}>Apartado</option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="mt-4">
-                        <label>Descripción</label>
-                        <textarea name="description" class="w-full rounded border-gray-300">{{ $product->description }}</textarea>
-                    </div>
-
-                    <div class="mt-4">
-                        <label>Imagen</label>
-                        <input type="file" name="image" class="w-full">
-
-                        @if($product->image)
-                            <img src="{{ asset('storage/'.$product->image) }}"
-                                 class="mt-2 h-32 rounded">
-                        @endif
                     </div>
 
                     <div class="mt-6 flex justify-end">
-                        <button class="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700 transition">
-                            Actualizar
+                        <a href="{{ route('products.index') }}" class="mr-4 text-gray-600 hover:underline flex items-center">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700 transition font-bold">
+                            Actualizar Producto
                         </button>
                     </div>
 
