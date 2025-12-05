@@ -1,39 +1,26 @@
-🚗 DealerPro: Sistema de Gestión de Concesionarios
-Este repositorio contiene el código fuente de DealerPro, una aplicación integral diseñada para la gestión eficiente de un concesionario de vehículos. Desde el control de inventario hasta el análisis de desempeño y la gestión de clientes, DealerPro ofrece todas las herramientas necesarias para optimizar las operaciones diarias.
+# 🛒 Sistema Punto de Venta (POS)
 
-✨ Características Principales
-DealerPro está equipado con un conjunto robusto de funcionalidades para centralizar la operación del concesionario:
+Sistema integral para la gestión de ventas, inventario y cajeros.
 
-Gestión de Inventario 📋:
+## ✨ Características Principales
 
-Control Completo: Funcionalidades para agregar, editar y eliminar vehículos del inventario.
+### 👤 Roles y Permisos
+- **Administrador:** Control total del sistema. Puede crear cajeros, asignar permisos (editar/eliminar) y gestionar inventario.
+- **Cajeros:** Interfaz simplificada para ventas. Permisos restringidos según configuración.
 
-Búsqueda y Filtros: Herramientas avanzadas para buscar y filtrar vehículos por marca, modelo, año, precio y estado (disponible, vendido, apartado).
+### 📦 Gestión de Inventario
+- CRUD completo de productos.
+- Control de Stock en tiempo real.
+- Alertas automáticas de **Stock Bajo** en el Dashboard.
+- Soporte para Código de Barras e IVA.
 
-Transacciones 💰:
+### 📊 Dashboard Inteligente
+- Tarjetas de estadísticas (KPIs).
+- Tabla de alertas de inventario crítico.
+- Accesos rápidos a funciones comunes.
 
-Registro de Ventas: Documentación completa del proceso de venta de un vehículo.
-
-Sistema de Apartados (Reservas): Gestión de las reservas de vehículos por parte de los clientes.
-
-Reportes y Análisis 📈:
-
-Gráficos de Desempeño: Visualización de estadísticas clave para la toma de decisiones.
-
-Métricas Clave: Reportes de ventas por periodo (mensual, trimestral), modelos más vendidos y desempeño de vendedores.
-
-Gestión de Clientes y Documentación 🧑‍🤝‍🧑:
-
-Registro y gestión de información básica de clientes.
-
-Asociación y gestión de la documentación relevante para las ventas y apartados.
-
-Exportación de Datos 📤:
-
-Capacidad de exportar reportes e información clave en formatos comunes como CSV y PDF.
-
-Seguridad y Roles 🛡️:
-
-Autenticación: Sistema de inicio de sesión seguro.
-
-Roles de Usuario: Definición de permisos y acceso a funciones basado en roles (Administrador y Vendedor).
+## 🚀 Tecnologías
+- **Laravel 10** (PHP)
+- **Tailwind CSS** (Diseño)
+- **SQLite** (Base de datos)
+- **Breeze** (Autenticación)
