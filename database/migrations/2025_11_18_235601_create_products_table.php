@@ -7,24 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     public function up(): void
-    {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->string('brand');
-            $table->string('model');
-            $table->integer('year');
-            $table->string('vin')->nullable();
-            $table->string('plate')->nullable();
-            $table->string('color')->nullable();
-            $table->integer('mileage')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->decimal('cost', 10, 2)->nullable();
-            $table->string('status')->default('available');
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('products', function (Blueprint $table) {
+        $table->id();
+        $table->string('barcode')->unique(); // Código de barras (vital para un POS)
+        $table->string('name');
+        $table->decimal('price', 10, 2); // Precio de venta
+        $table->integer('stock'); // Cantidad disponible
+        $table->boolean('has_iva')->default(true); // Si lleva IVA o no
+        $table->timestamps();
+    });
+}
 
     public function down(): void
     {

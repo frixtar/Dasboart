@@ -8,86 +8,112 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    /**
+     * Mostrar listado de productos/autos
+     */
     public function index()
     {
-        $products = Product::latest()->paginate(10);
+        $products = Product::latest()->get();
         return view('products.index', compact('products'));
     }
 
+    /**
+     * Form para crear auto
+     */
     public function create()
     {
         return view('products.create');
     }
 
+    /**
+     * Guardar auto nuevo
+     */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'brand' => 'required',
-            'model' => 'required',
-            'year' => 'required|numeric',
-            'vin' => 'nullable',
-            'plate' => 'nullable',
-            'color' => 'nullable',
+        $validated = $request->validate([
+            'brand' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'year' => 'nullable|numeric',
+            'vin' => 'nullable|string|max:255',
+            'plate' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:255',
             'mileage' => 'nullable|numeric',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'cost' => 'nullable|numeric',
-            'status' => 'required',
-            'description' => 'nullable',
-            'image' => 'nullable|image|max:2048'
+            'status' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048', // 2MB
         ]);
 
+        // Guardar imagen si existe
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $request->file('image')->store('products', 'public');
         }
 
-        Product::create($data);
+        Product::create($validated);
 
-        return redirect()->route('products.index')->with('success', 'Producto creado correctamente.');
+        return redirect()->route('products.index')
+            ->with('success', 'Auto agregado correctamente.');
     }
 
+    /**
+     * Form para editar auto
+     */
     public function edit(Product $product)
     {
         return view('products.edit', compact('product'));
     }
 
+    /**
+     * Actualizar auto
+     */
     public function update(Request $request, Product $product)
     {
-        $data = $request->validate([
-            'brand' => 'required',
-            'model' => 'required',
-            'year' => 'required|numeric',
-            'vin' => 'nullable',
-            'plate' => 'nullable',
-            'color' => 'nullable',
+        $validated = $request->validate([
+            'brand' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'year' => 'nullable|numeric',
+            'vin' => 'nullable|string|max:255',
+            'plate' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:255',
             'mileage' => 'nullable|numeric',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'cost' => 'nullable|numeric',
-            'status' => 'required',
-            'description' => 'nullable',
-            'image' => 'nullable|image|max:2048'
+            'status' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
 
+        // Si subió una nueva imagen
         if ($request->hasFile('image')) {
+
+            // Eliminar la anterior si existe
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
 
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $validated['image'] = $request->file('image')->store('products', 'public');
         }
 
-        $product->update($data);
+        $product->update($validated);
 
-        return redirect()->route('products.index')->with('success', 'Producto actualizado.');
+        return redirect()->route('products.index')
+            ->with('success', 'Auto actualizado correctamente.');
     }
 
+    /**
+     * Eliminar auto
+     */
     public function destroy(Product $product)
     {
+        // Eliminar imagen si existe
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
 
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Producto eliminado.');
+        return redirect()->route('products.index')
+            ->with('success', 'Auto eliminado correctamente.');
     }
 }

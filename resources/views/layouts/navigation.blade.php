@@ -37,7 +37,7 @@
     </x-nav-link>
 
     <!-- Clientes -->
-    <x-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" class="flex items-center gap-2 transition-all duration-200 hover:scale-105">
+    <x-nav-link :href="route('clientes.index')" :active="request()->routeIs('clientes.*')" class="flex items-center gap-2 transition-all duration-200 hover:scale-105">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17 20h5v-2a4 4 0 00-4-4h-1" />
