@@ -1,55 +1,111 @@
 <x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
-        <div class="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
+    <!-- Fondo con degradado cálido -->
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-amber-100 p-4">
+        
+        <!-- Tarjeta Principal -->
+        <div class="w-full max-w-md bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all hover:scale-[1.01]">
+            
+            <!-- Encabezado con Color y Logo -->
+            <div class="bg-gradient-to-r from-orange-500 to-red-500 p-8 text-center relative overflow-hidden">
+                <!-- Círculos decorativos de fondo -->
+                <div class="absolute top-0 left-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-x-10 -translate-y-10"></div>
+                <div class="absolute bottom-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full translate-x-10 translate-y-10"></div>
 
-            <h1 class="text-3xl font-bold text-center mb-6 text-gray-700">
-                🏪 Punto de Venta - Login
-            </h1>
-
-            @if ($errors->any())
-                <div class="mb-4 text-red-600 text-sm">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>• {{ $error }}</li>
-                        @endforeach
-                    </ul>
+                <!-- Icono de Tienda / POS -->
+                <div class="mx-auto bg-white/20 w-20 h-20 rounded-full flex items-center justify-center backdrop-blur-sm mb-4 shadow-inner border border-white/30">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
                 </div>
-            @endif
+                
+                <h1 class="text-3xl font-bold text-white tracking-tight text-shadow">
+                    {{ config('app.name', 'Punto de Venta') }}
+                </h1>
+                <p class="text-orange-100 mt-2 text-sm font-medium tracking-wide opacity-90">
+                    Acceso Administrativo
+                </p>
+            </div>
 
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
+            <!-- Sección del Formulario -->
+            <div class="p-8 pt-10">
+                
+                <!-- Mensajes de Error (Estilizados) -->
+                @if ($errors->any())
+                    <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r shadow-sm animate-pulse">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Credenciales incorrectas</h3>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
-                <!-- Email -->
-                <div class="mb-4">
-                    <label class="block text-gray-600 font-medium mb-1">Correo</label>
-                    <input class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        type="email" name="email" required autofocus autocomplete="username">
-                </div>
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
 
-                <!-- Password -->
-                <div class="mb-4">
-                    <label class="block text-gray-600 font-medium mb-1">Contraseña</label>
-                    <input class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        type="password" name="password" required autocomplete="current-password">
-                </div>
+                    <!-- Email con Icono -->
+                    <div class="mb-6 relative">
+                        <label class="block text-gray-600 font-bold mb-2 text-xs uppercase tracking-wider">Correo Electrónico</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                                </svg>
+                            </div>
+                            <input class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all outline-none bg-gray-50 focus:bg-white text-gray-700"
+                                type="email" name="email" required autofocus autocomplete="username" placeholder="admin@tienda.com">
+                        </div>
+                    </div>
 
-                <!-- Remember -->
-                <div class="flex items-center mb-4">
-                    <input type="checkbox" name="remember" class="mr-2">
-                    <span class="text-gray-600 text-sm">Recordarme</span>
-                </div>
+                    <!-- Password con Icono -->
+                    <div class="mb-6">
+                         <label class="block text-gray-600 font-bold mb-2 text-xs uppercase tracking-wider">Contraseña</label>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <input class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all outline-none bg-gray-50 focus:bg-white text-gray-700"
+                                type="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+                        </div>
+                    </div>
 
-                <button
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 text-lg font-semibold transition">
-                    Iniciar Sesión
-                </button>
+                    <!-- Recordarme y Olvidé contraseña -->
+                    <div class="flex items-center justify-between mb-8">
+                        <label class="flex items-center space-x-2 cursor-pointer group select-none">
+                            <input type="checkbox" name="remember" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 transition cursor-pointer">
+                            <span class="text-sm text-gray-500 group-hover:text-gray-700 transition font-medium">Recordarme</span>
+                        </label>
+                        
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" class="text-sm text-orange-600 hover:text-orange-800 font-bold transition hover:underline">
+                                ¿Olvidaste tu clave?
+                            </a>
+                        @endif
+                    </div>
 
-                <div class="text-center mt-4 text-sm">
-                    ¿No tienes cuenta?
-                    <a href="{{ route('register') }}" class="text-indigo-600 font-semibold">Registrarse</a>
-                </div>
-            </form>
+                    <!-- Botón de Acción -->
+                    <button class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-orange-500/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                        <span>Iniciar Sesión</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                    
+                    <!-- ELIMINADO EL FOOTER DE REGISTRO -->
 
+                </form>
+            </div>
         </div>
+        
+        <!-- Footer Discreto -->
+        <div class="absolute bottom-4 text-center text-orange-900/20 text-xs font-semibold select-none">
+            &copy; {{ date('Y') }} Sistema de Punto de Venta
+        </div>
+
     </div>
 </x-guest-layout>
