@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'POS') }} - Terminal</title>
+    <link rel="icon" href="{{ asset('kutay.png') }}" type="image/png">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -21,7 +22,7 @@
         
         <!-- Izquierda: Logo y Título -->
         <div class="flex items-center gap-3">
-            <a href="{{ route('dashboard') }}">
+           <a href="{{ url('/') }}">
                 <x-application-logo class="block h-8 w-auto fill-current text-orange-500" />
             </a>
             <div class="h-6 w-px bg-gray-300 mx-2"></div>

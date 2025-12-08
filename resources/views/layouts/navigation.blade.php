@@ -2,12 +2,13 @@
 
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-20"> <!-- Aumenté la altura de la barra a h-20 -->
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <!-- AQUÍ ESTÁ EL CAMBIO: Quitamos h-9 y pusimos h-16 para que se vea grande -->
+                        <x-application-logo class="block h-16 w-auto object-contain transition-transform hover:scale-105" />
                     </a>
                 </div>
 
@@ -31,9 +32,16 @@
                         {{ __('Productos') }}
                     </x-nav-link>
 
-                    <!-- 3. Cajeros (SOLO ADMINISTRADOR) -->
-                    <!-- Si el usuario logueado es admin, ve este botón. Si no, se oculta -->
+                    <!-- 3. Reportes (SOLO ADMINISTRADOR) -->
                     @if(Auth::user()->role === 'administrador')
+                        <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="flex items-center gap-2 transition-all duration-200 hover:scale-105">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            {{ __('Reportes') }}
+                        </x-nav-link>
+                        
+                        <!-- 4. Cajeros (SOLO ADMINISTRADOR) -->
                         <x-nav-link :href="route('cashiers.index')" :active="request()->routeIs('cashiers.*')" class="flex items-center gap-2 transition-all duration-200 hover:scale-105">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -103,6 +111,10 @@
             </x-responsive-nav-link>
 
             @if(Auth::user()->role === 'administrador')
+                <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                    {{ __('Reportes') }}
+                </x-responsive-nav-link>
+
                 <x-responsive-nav-link :href="route('cashiers.index')" :active="request()->routeIs('cashiers.*')">
                     {{ __('Cajeros') }}
                 </x-responsive-nav-link>

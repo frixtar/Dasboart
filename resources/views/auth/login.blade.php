@@ -1,35 +1,21 @@
 <x-guest-layout>
-    <!-- Fondo con degradado cálido -->
     <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-amber-100 p-4">
         
-        <!-- Tarjeta Principal -->
         <div class="w-full max-w-md bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all hover:scale-[1.01]">
             
-            <!-- Encabezado con Color y Logo -->
-            <div class="bg-gradient-to-r from-orange-500 to-red-500 p-8 text-center relative overflow-hidden">
-                <!-- Círculos decorativos de fondo -->
-                <div class="absolute top-0 left-0 w-20 h-20 bg-white opacity-10 rounded-full -translate-x-10 -translate-y-10"></div>
-                <div class="absolute bottom-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full translate-x-10 translate-y-10"></div>
-
-                <!-- Icono de Tienda / POS -->
-                <div class="mx-auto bg-white/20 w-20 h-20 rounded-full flex items-center justify-center backdrop-blur-sm mb-4 shadow-inner border border-white/30">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
+            <!-- AQUÍ ESTÁ EL CAMBIO: LOGO REAL -->
+            <div class="bg-white p-8 text-center border-b border-gray-100 relative overflow-hidden">
+                <div class="flex justify-center mb-4">
+                    <img src="{{ asset('kutay.png') }}" alt="Abarrotes Kutay" class="h-32 w-auto object-contain transition-transform hover:scale-105">
                 </div>
                 
-                <h1 class="text-3xl font-bold text-white tracking-tight text-shadow">
-                    {{ config('app.name', 'Punto de Venta') }}
-                </h1>
-                <p class="text-orange-100 mt-2 text-sm font-medium tracking-wide opacity-90">
-                    Acceso Administrativo
+                <p class="text-orange-600 mt-2 text-sm font-bold tracking-wide uppercase opacity-80">
+                    Sistema de Punto de Venta
                 </p>
             </div>
 
-            <!-- Sección del Formulario -->
-            <div class="p-8 pt-10">
+            <div class="p-8 pt-6">
                 
-                <!-- Mensajes de Error (Estilizados) -->
                 @if ($errors->any())
                     <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r shadow-sm animate-pulse">
                         <div class="flex">
@@ -48,7 +34,6 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    <!-- Email con Icono -->
                     <div class="mb-6 relative">
                         <label class="block text-gray-600 font-bold mb-2 text-xs uppercase tracking-wider">Correo Electrónico</label>
                         <div class="relative group">
@@ -62,7 +47,6 @@
                         </div>
                     </div>
 
-                    <!-- Password con Icono -->
                     <div class="mb-6">
                          <label class="block text-gray-600 font-bold mb-2 text-xs uppercase tracking-wider">Contraseña</label>
                         <div class="relative group">
@@ -76,7 +60,6 @@
                         </div>
                     </div>
 
-                    <!-- Recordarme y Olvidé contraseña -->
                     <div class="flex items-center justify-between mb-8">
                         <label class="flex items-center space-x-2 cursor-pointer group select-none">
                             <input type="checkbox" name="remember" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 transition cursor-pointer">
@@ -90,21 +73,17 @@
                         @endif
                     </div>
 
-                    <!-- Botón de Acción -->
-                    <button class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-orange-500/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                    <button class="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-orange-500/30 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
                         <span>Iniciar Sesión</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                     </button>
-                    
-                    <!-- ELIMINADO EL FOOTER DE REGISTRO -->
 
                 </form>
             </div>
         </div>
         
-        <!-- Footer Discreto -->
         <div class="absolute bottom-4 text-center text-orange-900/20 text-xs font-semibold select-none">
-            &copy; {{ date('Y') }} Sistema de Punto de Venta
+            &copy; {{ date('Y') }} Abarrotes Kutay
         </div>
 
     </div>

@@ -13,43 +13,42 @@
                     <form action="{{ route('cashiers.store') }}" method="POST">
                         @csrf
                         
+                        <!-- Nombre -->
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo</label>
-                            <input type="text" name="name" class="w-full rounded border-gray-300" required>
+                            <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                            @error('name') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
+                        <!-- Email -->
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico (Login)</label>
-                            <input type="email" name="email" class="w-full rounded border-gray-300" required>
+                            <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                            @error('email') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
+                        <!-- Password -->
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
-                            <input type="password" name="password" class="w-full rounded border-gray-300" required>
+                            <input type="password" name="password" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                            <p class="text-xs text-gray-500 mt-1">🔒 Mínimo 8 caracteres.</p>
+                            @error('password') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
+                        <!-- Confirm Password -->
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Confirmar Contraseña</label>
-                            <input type="password" name="password_confirmation" class="w-full rounded border-gray-300" required>
+                            <input type="password" name="password_confirmation" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
                         </div>
 
-                        <hr class="mb-6">
-
-                        <h3 class="font-bold text-lg mb-4">Permisos Especiales</h3>
-                        
-                        <div class="flex items-center mb-4">
-                            <input type="checkbox" name="can_edit_products" id="perm_edit" class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-                            <label for="perm_edit" class="ml-2 text-gray-700">Puede Editar Productos (Precios/Stock)</label>
+                        <div class="flex justify-end gap-4 mt-6">
+                            <a href="{{ route('cashiers.index') }}" class="bg-gray-500 text-white font-bold py-2 px-4 rounded hover:bg-gray-600 transition">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition shadow-lg">
+                                Registrar Cajero
+                            </button>
                         </div>
-
-                        <div class="flex items-center mb-6">
-                            <input type="checkbox" name="can_delete_products" id="perm_del" class="w-5 h-5 text-red-600 rounded border-gray-300 focus:ring-red-500">
-                            <label for="perm_del" class="ml-2 text-gray-700">Puede Eliminar Productos del sistema</label>
-                        </div>
-
-                        <button type="submit" class="w-full bg-blue-700 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                            Registrar Cajero
-                        </button>
                     </form>
 
                 </div>

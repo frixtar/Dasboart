@@ -4,12 +4,13 @@ use App\Models\User;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
-
     $response->assertStatus(200);
 });
 
-test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+test('redirección de administradores a dashboard', function () {
+    $user = User::factory()->create([
+        'role' => 'administrador'
+    ]);
 
     $response = $this->post('/login', [
         'email' => $user->email,
@@ -17,7 +18,22 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('dashboard'));
+});
+    
+test('redirección de cajeros a pos después de iniciar sesión', function () {
+    $user = User::factory()->create([
+        'role' => 'cajero'
+    ]);
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    // Verificamos que aterrice en el POS
+    $response->assertRedirect(route('pos.index'));
 });
 
 test('users can not authenticate with invalid password', function () {
@@ -37,5 +53,6 @@ test('users can logout', function () {
     $response = $this->actingAs($user)->post('/logout');
 
     $this->assertGuest();
-    $response->assertRedirect('/');
+    // Al salir, normalmente mandamos al inicio (login)
+    $response->assertRedirect('/'); 
 });

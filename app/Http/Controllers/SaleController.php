@@ -13,13 +13,13 @@ class SaleController extends Controller
 {
     public function store(Request $request)
     {
-        // 1. Validamos que venga el carrito
         $data = $request->validate([
             'cart' => 'required|array|min:1',
+            'amount_paid' => 'nullable|numeric',
+            'change' => 'nullable|numeric',
         ]);
 
         try {
-            // INICIO DE LA TRANSACCIÓN (Todo o nada)
             $result = DB::transaction(function () use ($data) {
                 
                 $cart = $data['cart'];
@@ -27,26 +27,30 @@ class SaleController extends Controller
                 $subtotalSale = 0;
                 $ivaSale = 0;
 
-                $invoiceNumber = 'TICKET-' . date('Ymd-His');
+                // Generamos un folio único real
+                $invoiceNumber = 'TICKET-' . date('Ymd-His') . '-' . rand(100, 999);
 
+                // A. Creamos el encabezado de la venta (Inicializado en 0)
                 $sale = Sale::create([
-                    'user_id' => Auth::id(), // El cajero actual
+                    'user_id' => Auth::id(),
                     'invoice_number' => $invoiceNumber,
-                    'subtotal' => 0, // Lo actualizamos al final
+                    'subtotal' => 0,
                     'iva' => 0,
                     'total' => 0,
                 ]);
 
+
                 foreach ($cart as $item) {
-                    $product = Product::lockForUpdate()->find($item['id']); // Bloqueamos para evitar doble venta simultánea
+                    // Bloqueamos el producto para evitar errores de concurrencia
+                    $product = Product::lockForUpdate()->find($item['id']);
 
                     // Validación de Stock (Seguridad de Backend)
                     if (!$product || $product->stock < $item['quantity']) {
                         throw new \Exception("Stock insuficiente para el producto: " . $product->name);
                     }
 
-                    // Cálculos
-                    $price = $product->price; // Usamos el precio de la BD, no el del frontend (por seguridad)
+                    // Cálculos usando el precio real de la Base de Datos
+                    $price = $product->price; 
                     $quantity = $item['quantity'];
                     $rowTotal = $price * $quantity;
 
@@ -59,12 +63,12 @@ class SaleController extends Controller
                         $rowIva = $rowTotal - $rowSubtotal;
                     }
 
-                    // Sumamos a los generales
+                    // Sumamos a los acumuladores generales
                     $totalSale += $rowTotal;
                     $subtotalSale += $rowSubtotal;
                     $ivaSale += $rowIva;
 
-                    // C. Guardar el Detalle
+                    // C. Guardar el Detalle (Renglón del ticket)
                     SaleDetail::create([
                         'sale_id' => $sale->id,
                         'product_id' => $product->id,
@@ -73,11 +77,11 @@ class SaleController extends Controller
                         'total_row' => $rowTotal,
                     ]);
 
-                    // D. RESTAR STOCK (Lo más importante)
+                    // D. RESTAR STOCK (Crucial)
                     $product->decrement('stock', $quantity);
                 }
 
-                // E. Actualizamos la venta con los totales reales calculados
+                // E. Actualizamos la venta con los totales finales calculados
                 $sale->update([
                     'subtotal' => $subtotalSale,
                     'iva' => $ivaSale,
@@ -87,19 +91,20 @@ class SaleController extends Controller
                 return $sale;
             });
 
-            // Si todo salió bien:
+            // Respuesta exitosa al Frontend
             return response()->json([
                 'success' => true,
                 'message' => 'Venta guardada correctamente',
-                'invoice_number' => $result->invoice_number
+                'invoice_number' => $result->invoice_number,
+                'sale_id' => $result->id
             ]);
 
         } catch (\Exception $e) {
-            // Si algo falló (Stock insuficiente, error de BD, etc.)
+            // Si algo falla, Laravel deshace todos los cambios (Rollback)
             return response()->json([
                 'success' => false,
                 'message' => 'Error al procesar la venta: ' . $e->getMessage()
-            ], 400); // Error 400
+            ], 400);
         }
     }
 }

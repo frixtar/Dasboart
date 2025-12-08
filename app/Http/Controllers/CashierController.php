@@ -11,7 +11,6 @@ class CashierController extends Controller
 {
     public function index()
     {
-        // Solo mostramos a los cajeros, no al admin
         $cashiers = User::where('role', 'cajero')->get();
         return view('cashiers.index', compact('cashiers'));
     }
@@ -23,30 +22,72 @@ class CashierController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        // Reglas de Validación
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+            'password' => ['required', 'confirmed', 'min:8', Rules\Password::defaults()],
+        ];
+
+        // Mensajes Personalizados
+        $messages = [
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.confirmed' => 'La confirmación de contraseña no coincide.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'email.unique' => 'Este correo ya está registrado.',
+        ];
+
+        $request->validate($rules, $messages);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'cajero', // <--- Importante: Siempre se crea como cajero
-            // Si el checkbox viene marcado, es true. Si no, false.
-            'can_edit_products' => $request->has('can_edit_products'), 
-            'can_delete_products' => $request->has('can_delete_products'),
+            'role' => 'cajero',
         ]);
 
         return redirect()->route('cashiers.index')->with('success', 'Cajero registrado correctamente.');
     }
-    
-    // Método para borrar cajeros (Opcional pero útil)
+
+    public function edit($id)
+    {
+        $cashier = User::where('id', $id)->where('role', 'cajero')->firstOrFail();
+        return view('cashiers.edit', compact('cashier'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email,'.$id],
+            'password' => ['nullable', 'confirmed', 'min:8', Rules\Password::defaults()],
+        ];
+
+        $messages = [
+            'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'La confirmación de contraseña no coincide.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('cashiers.index')->with('success', 'Datos del cajero actualizados.');
+    }
+
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        if($user->role !== 'administrador') { // Protegemos al admin
+        if($user->role !== 'administrador') {
             $user->delete();
             return back()->with('success', 'Cajero eliminado.');
         }
