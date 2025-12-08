@@ -260,8 +260,6 @@
             barcodeInput.focus();
         }
 
-        // --- LÓGICA DEL MODAL DE COBRO ---
-
         function openPaymentModal() {
             if(cart.length === 0) return;
 
@@ -326,33 +324,38 @@
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
+
                     alert("✅ ¡Venta Exitosa! Ticket #" + data.invoice_number);
-                    window.location.reload(); 
+                    
+                    const ticketUrl = "{{ url('/sales') }}/" + data.sale_id + "/ticket";
+
+                    const width = 400;
+                    const height = 600;
+                    const left = (screen.width - width) / 2;
+                    const top = (screen.height - height) / 2;
+                    
+                    window.open(ticketUrl, 'Ticket', `width=${width},height=${height},top=${top},left=${left}`);
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+
                 } else {
                     alert("Error: " + data.message);
                     confirmButton.disabled = false;
                     confirmButton.innerText = "CONFIRMAR PAGO";
                 }
-            })
-            .catch(err => {
-                console.error(err);
-                alert("Error de conexión");
-                confirmButton.disabled = false;
-                confirmButton.innerText = "CONFIRMAR PAGO";
             });
         }
 
         // Teclas Rápidas
         document.addEventListener('keydown', function(e) {
-            // ESC cierra modal
             if (e.key === 'Escape' && !paymentModal.classList.contains('hidden')) {
                 closeModal();
             }
-            // ENTER confirma pago si el modal está abierto
             if (e.key === 'Enter' && !paymentModal.classList.contains('hidden') && !confirmButton.disabled) {
                 confirmSale();
             }
-            // ENTER busca producto si el modal está cerrado
             if (e.key === 'Enter' && paymentModal.classList.contains('hidden') && document.activeElement === barcodeInput) {
                 const code = barcodeInput.value.trim();
                 if(code) {

@@ -42,13 +42,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// 3. GRUPO PROTEGIDO (Funciones del Sistema)
 Route::middleware('auth')->group(function () {
-    
-    // Reportes Avanzados (Controlador dedicado)
+    // Reportes
     Route::get('/reports', [DashboardController::class, 'index'])->name('reports.index');
 
-    // Gestión (Admin)
+    // administración de Productos y Cajeros
     Route::resource('products', ProductController::class);
     Route::resource('cashiers', CashierController::class);
 
@@ -60,6 +58,9 @@ Route::middleware('auth')->group(function () {
     // Punto de Venta (POS)
     Route::get('/pos', [POSController::class, 'index'])->name('pos.index');
     Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
+
+    // Ruta para imprimir el ticket
+    Route::get('/sales/{sale}/ticket', [App\Http\Controllers\SaleController::class, 'ticket'])->name('sales.ticket');
 });
 
 require __DIR__.'/auth.php';

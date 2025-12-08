@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
+    // 1. PROCESAR Y GUARDAR LA VENTA
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -23,38 +24,36 @@ class SaleController extends Controller
             $result = DB::transaction(function () use ($data) {
                 
                 $cart = $data['cart'];
+                // Generar folio único
+                $invoiceNumber = 'TICKET-' . date('Ymd-His') . '-' . rand(100, 999);
+
+                $sale = Sale::create([
+                    'user_id' => Auth::id(),
+                    'invoice_number' => $invoiceNumber,
+                    'subtotal' => 0, // Se calcula abajo
+                    'iva' => 0,
+                    'total' => 0,
+                    'amount_paid' => $data['amount_paid'] ?? 0, 
+                    'change' => $data['change'] ?? 0,    
+                ]);
+
                 $totalSale = 0;
                 $subtotalSale = 0;
                 $ivaSale = 0;
 
-                // Generamos un folio único real
-                $invoiceNumber = 'TICKET-' . date('Ymd-His') . '-' . rand(100, 999);
-
-                // A. Creamos el encabezado de la venta (Inicializado en 0)
-                $sale = Sale::create([
-                    'user_id' => Auth::id(),
-                    'invoice_number' => $invoiceNumber,
-                    'subtotal' => 0,
-                    'iva' => 0,
-                    'total' => 0,
-                ]);
-
-
+                // Procesar cada producto
                 foreach ($cart as $item) {
-                    // Bloqueamos el producto para evitar errores de concurrencia
                     $product = Product::lockForUpdate()->find($item['id']);
 
-                    // Validación de Stock (Seguridad de Backend)
                     if (!$product || $product->stock < $item['quantity']) {
-                        throw new \Exception("Stock insuficiente para el producto: " . $product->name);
+                        throw new \Exception("Stock insuficiente para: " . $product->name);
                     }
 
-                    // Cálculos usando el precio real de la Base de Datos
-                    $price = $product->price; 
+                    $price = $product->price;
                     $quantity = $item['quantity'];
                     $rowTotal = $price * $quantity;
 
-                    // Lógica de IVA
+                    // Cálculo de IVA
                     $rowSubtotal = $rowTotal;
                     $rowIva = 0;
 
@@ -63,12 +62,11 @@ class SaleController extends Controller
                         $rowIva = $rowTotal - $rowSubtotal;
                     }
 
-                    // Sumamos a los acumuladores generales
                     $totalSale += $rowTotal;
                     $subtotalSale += $rowSubtotal;
                     $ivaSale += $rowIva;
 
-                    // C. Guardar el Detalle (Renglón del ticket)
+                    // Guardar detalle
                     SaleDetail::create([
                         'sale_id' => $sale->id,
                         'product_id' => $product->id,
@@ -77,11 +75,11 @@ class SaleController extends Controller
                         'total_row' => $rowTotal,
                     ]);
 
-                    // D. RESTAR STOCK (Crucial)
+                    // Restar inventario
                     $product->decrement('stock', $quantity);
                 }
 
-                // E. Actualizamos la venta con los totales finales calculados
+                // Actualizar totales finales de la venta
                 $sale->update([
                     'subtotal' => $subtotalSale,
                     'iva' => $ivaSale,
@@ -91,20 +89,25 @@ class SaleController extends Controller
                 return $sale;
             });
 
-            // Respuesta exitosa al Frontend
             return response()->json([
                 'success' => true,
                 'message' => 'Venta guardada correctamente',
                 'invoice_number' => $result->invoice_number,
-                'sale_id' => $result->id
+                'sale_id' => $result->id 
             ]);
 
         } catch (\Exception $e) {
-            // Si algo falla, Laravel deshace todos los cambios (Rollback)
             return response()->json([
                 'success' => false,
                 'message' => 'Error al procesar la venta: ' . $e->getMessage()
             ], 400);
         }
+    }
+
+    public function ticket($id)
+    {
+        $sale = Sale::with(['details.product', 'user'])->findOrFail($id);
+        
+        return view('sales.ticket', compact('sale'));
     }
 }

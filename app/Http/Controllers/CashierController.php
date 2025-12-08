@@ -22,19 +22,23 @@ class CashierController extends Controller
 
     public function store(Request $request)
     {
-        // Reglas de Validación
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/'],
+
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'confirmed'],
+            
             'password' => ['required', 'confirmed', 'min:8', Rules\Password::defaults()],
         ];
 
-        // Mensajes Personalizados
         $messages = [
+            'name.regex' => 'El nombre solo puede contener letras y espacios.',
+            
+            'email.unique' => 'Este correo ya está registrado.',
+            'email.confirmed' => 'La confirmación del correo no coincide.',
+            
             'password.required' => 'La contraseña es obligatoria.',
             'password.confirmed' => 'La confirmación de contraseña no coincide.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-            'email.unique' => 'Este correo ya está registrado.',
         ];
 
         $request->validate($rules, $messages);
@@ -60,12 +64,13 @@ class CashierController extends Controller
         $user = User::findOrFail($id);
 
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/'],
             'email' => ['required', 'email', 'unique:users,email,'.$id],
             'password' => ['nullable', 'confirmed', 'min:8', Rules\Password::defaults()],
         ];
 
         $messages = [
+            'name.regex' => 'El nombre solo puede contener letras y espacios.',
             'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'La confirmación de contraseña no coincide.',
         ];

@@ -17,6 +17,8 @@
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo</label>
                             <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                            <!-- Texto de ayuda agregado -->
+                            <p class="text-xs text-gray-500 mt-1">🔤 Solo letras y espacios (sin números).</p>
                             @error('name') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -25,6 +27,12 @@
                             <label class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico (Login)</label>
                             <input type="email" name="email" value="{{ old('email') }}" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
                             @error('email') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Confirmar Email -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Confirmar Correo Electrónico</label>
+                            <input type="email" name="email_confirmation" value="{{ old('email_confirmation') }}" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
                         </div>
 
                         <!-- Password -->
