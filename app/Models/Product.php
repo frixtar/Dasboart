@@ -12,8 +12,19 @@ class Product extends Model
     protected $fillable = [
         'barcode',
         'name',
+        'category_id', 
         'price',
         'stock',
+        'expiration_date',
         'has_iva',
     ];
+
+    protected $casts = [
+        'expiration_date' => 'date',
+        'has_iva' => 'boolean',
+    ];
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

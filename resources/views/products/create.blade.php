@@ -58,6 +58,31 @@
                             </div>
                         </div>
 
+                        <!-- Categoría -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Categoría</label>
+                            
+                            <select name="category_id" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                                <option value="" disabled selected>Selecciona una opción...</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            
+                            <a href="{{ route('categories.create') }}" class="text-xs text-blue-600 hover:underline mt-1 inline-block">
+                                + Crear nueva categoría
+                            </a>
+                            @error('category_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Fecha de Caducidad</label>
+<input type="date" name="expiration_date" value="{{ old('expiration_date') }}" 
+       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500 @error('expiration_date') border-red-500 @enderror" 
+       required>
+                        </div>
+
                         <!-- Checkbox IVA -->
                         <div class="mb-6 p-3 bg-gray-50 rounded border border-gray-100">
                             <label class="inline-flex items-center cursor-pointer">

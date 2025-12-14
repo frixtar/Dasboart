@@ -1,6 +1,4 @@
 <x-pos-layout>
-
-    <!-- Contenedor Principal -->
     <div class="h-full flex flex-col md:flex-row bg-gray-100 overflow-hidden">
         
         <!-- SECCIÓN IZQUIERDA: PRODUCTOS -->
@@ -70,9 +68,6 @@
         </div>
     </div>
 
-    <!-- ========================= -->
-    <!-- MODAL DE COBRO (POP-UP) -->
-    <!-- ========================= -->
     <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 transform scale-100 transition-transform">
             
@@ -116,13 +111,11 @@
             </div>
         </div>
     </div>
-
-    <!-- LÓGICA JAVASCRIPT -->
     <script>
         // 1. CARGA DE DATOS
         const allProducts = @json($products);
         let cart = [];
-        let currentTotal = 0; // Guardamos el total numérico aquí
+        let currentTotal = 0;
 
         // 2. REFERENCIAS DOM (Pantalla Principal)
         const cartContainer = document.getElementById('cartContainer');
@@ -139,8 +132,6 @@
 
         // Formateador
         const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
-
-        // --- FUNCIONES CARRITO ---
 
         function addToCart(productId) {
             const product = allProducts.find(p => p.id === productId);

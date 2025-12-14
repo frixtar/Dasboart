@@ -8,14 +8,11 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
-            <!-- 1. TARJETAS KPI (Dinero y Métricas) -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <!-- Ventas Hoy -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border-l-4 border-green-500 p-6 transform hover:scale-105 transition duration-300">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-green-100 text-green-600">
-                            <!-- Icono Dinero -->
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <div class="ml-4">
@@ -162,7 +159,6 @@
         </div>
     </div>
 
-    <!-- Scripts para Gráficas (Chart.js) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const ctx = document.getElementById('salesChart');
@@ -170,20 +166,19 @@
         new Chart(ctx, {
             type: 'line', // Tipo de gráfica (Línea)
             data: {
-                // Pasamos los datos calculados en PHP (DashboardController)
                 labels: @json($chartLabels ?? []),
                 datasets: [{
                     label: 'Ventas ($)',
                     data: @json($chartValues ?? []),
-                    borderColor: '#3b82f6', // Color de línea (Azul Tailwind)
+                    borderColor: '#3b82f6',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)', // Relleno transparente
                     borderWidth: 3,
                     pointBackgroundColor: '#ffffff',
                     pointBorderColor: '#3b82f6',
                     pointRadius: 6,
                     pointHoverRadius: 8,
-                    fill: true, // Rellenar debajo de la línea
-                    tension: 0.4 // Hace la línea curva suave
+                    fill: true,
+                    tension: 0.4
                 }]
             },
             options: {

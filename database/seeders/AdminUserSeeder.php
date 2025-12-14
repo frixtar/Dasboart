@@ -10,15 +10,13 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Verificar si ya existe para no duplicarlo
         if (!User::where('email', 'admin@sistema.com')->exists()) {
             
             User::create([
                 'name' => 'Administrador Principal',
                 'email' => 'admin@sistema.com',
-                'password' => Hash::make('password123'), // Contraseña segura
+                'password' => Hash::make('password123'),
                 
-                // Aquí definimos su rol y poderes
                 'role' => 'administrador', 
                 'can_edit_products' => true,
                 'can_delete_products' => true,

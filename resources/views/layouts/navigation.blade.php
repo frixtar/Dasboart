@@ -1,13 +1,10 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
 
-    <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-20"> <!-- Aumenté la altura de la barra a h-20 -->
+        <div class="flex justify-between h-20">
             <div class="flex">
-                <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <!-- AQUÍ ESTÁ EL CAMBIO: Quitamos h-9 y pusimos h-16 para que se vea grande -->
                         <x-application-logo class="block h-16 w-auto object-contain transition-transform hover:scale-105" />
                     </a>
                 </div>
@@ -86,7 +83,6 @@
                 </x-dropdown>
             </div>
 
-            <!-- Hamburger (Menú Móvil) -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition duration-150">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -98,7 +94,6 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu (Lo que se ve en el celular) -->
     <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             
@@ -134,7 +129,6 @@
                     {{ __('Mi Perfil') }}
                 </x-responsive-nav-link>
 
-                <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
