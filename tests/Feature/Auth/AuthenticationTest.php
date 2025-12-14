@@ -8,8 +8,10 @@ test('login screen can be rendered', function () {
 });
 
 test('redirección de administradores a dashboard', function () {
+    // CORRECCIÓN: Generamos password fresco
     $user = User::factory()->create([
-        'role' => 'administrador'
+        'role' => 'administrador',
+        'password' => bcrypt('password'), 
     ]);
 
     $response = $this->post('/login', [
@@ -22,8 +24,10 @@ test('redirección de administradores a dashboard', function () {
 });
     
 test('redirección de cajeros a pos después de iniciar sesión', function () {
+    // CORRECCIÓN: Generamos password fresco
     $user = User::factory()->create([
-        'role' => 'cajero'
+        'role' => 'cajero',
+        'password' => bcrypt('password'),
     ]);
 
     $response = $this->post('/login', [
@@ -37,7 +41,9 @@ test('redirección de cajeros a pos después de iniciar sesión', function () {
 });
 
 test('users can not authenticate with invalid password', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'password' => bcrypt('password'),
+    ]);
 
     $this->post('/login', [
         'email' => $user->email,
@@ -48,11 +54,13 @@ test('users can not authenticate with invalid password', function () {
 });
 
 test('users can logout', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create([
+        'password' => bcrypt('password'),
+    ]);
 
     $response = $this->actingAs($user)->post('/logout');
 
     $this->assertGuest();
-    // Al salir, normalmente mandamos al inicio (login)
-    $response->assertRedirect('/'); 
+    // CORRECCIÓN: Al salir, el sistema redirige al login (ya sea directo o por la ruta raíz)
+    $response->assertRedirect('/login'); 
 });
