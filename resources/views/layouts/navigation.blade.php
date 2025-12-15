@@ -1,5 +1,4 @@
-<nav x-data="{ open: false }"
-     class="bg-gradient-to-r from-sky-500 via-sky-400 to-cyan-400 text-white shadow-md">
+<nav x-data="{ open: false }" class="bg-sky-900 border-b border-gray-100">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -8,8 +7,8 @@
             <div class="flex items-center gap-8">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                     <x-application-logo class="h-8 w-auto object-contain" />
-                    <span class="font-semibold tracking-wide text-white">
-                        POS
+                    <span class="font-semibold tracking-wide text-lg text-gray-800">
+                        Navegador de Administración
                     </span>
                 </a>
 
@@ -106,9 +105,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Mobile menu -->
-    <div x-show="open" x-transition class="sm:hidden bg-white text-gray-800">
+    <div x-show="open" x-transition class="sm:hidden bg-black text-gray-800">
         <div class="px-4 pt-4 space-y-2">
 
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
