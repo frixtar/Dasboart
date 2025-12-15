@@ -9,8 +9,6 @@
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-xl sm:rounded-2xl overflow-hidden border border-gray-100">
-                
-                <!-- Encabezado del Formulario -->
                 <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-8 py-6 text-white">
                     <div class="flex items-center gap-4">
                         <div class="h-16 w-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold backdrop-blur-sm border-2 border-white/30">

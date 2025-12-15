@@ -8,7 +8,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             
-            <!-- 1. ALERTAS DE STOCK (Solo visibles si hay urgencias) -->
             @if($lowStockProducts->count() > 0)
             <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div class="flex items-center">
@@ -24,9 +23,7 @@
             </div>
             @endif
 
-            <!-- 2. TARJETAS DE RESUMEN (KPIs Básicos) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Tarjeta Productos -->
                 <div class="bg-white overflow-hidden shadow-sm rounded-xl border-b-4 border-blue-500 p-6 flex items-center justify-between">
                     <div>
                         <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Inventario Total</p>
@@ -37,8 +34,6 @@
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                     </div>
                 </div>
-
-                <!-- Tarjeta Cajeros -->
                 <div class="bg-white overflow-hidden shadow-sm rounded-xl border-b-4 border-green-500 p-6 flex items-center justify-between transform hover:scale-105 transition duration-300">
                     <div>
                         <p class="text-gray-500 text-xs font-bold uppercase tracking-wider">Equipo de Ventas</p>
@@ -62,8 +57,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 3. MENÚ DE ACCIONES PRINCIPALES -->
             <div>
                 <h3 class="font-bold text-xl text-gray-800 mb-6 flex items-center gap-2">
                     <span class="w-1 h-6 bg-blue-600 rounded-full inline-block"></span>
@@ -71,8 +64,6 @@
                 </h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                    <!-- 2. REPORTES FINANCIEROS -->
                     <a href="{{ route('reports.index') }}" class="group block bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-purple-200 hover:shadow-lg transition-all transform hover:-translate-y-1">
                         <div class="p-6 text-center">
                             <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
@@ -82,8 +73,6 @@
                             <p class="text-gray-500 text-sm mt-2">Estadísticas de ventas</p>
                         </div>
                     </a>
-
-                    <!-- 3. INVENTARIO -->
                     <a href="{{ route('products.index') }}" class="group block bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-green-200 hover:shadow-lg transition-all transform hover:-translate-y-1">
                         <div class="p-6 text-center">
                             <div class="w-16 h-16 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
@@ -93,8 +82,6 @@
                             <p class="text-gray-500 text-sm mt-2">Gestionar productos</p>
                         </div>
                     </a>
-
-                    <!-- 4. CAJEROS -->
                     <a href="{{ route('cashiers.index') }}" class="group block bg-white rounded-2xl shadow-sm border border-gray-100 hover:border-orange-200 hover:shadow-lg transition-all transform hover:-translate-y-1">
                         <div class="p-6 text-center">
                             <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-600 group-hover:text-white transition-colors duration-300">
@@ -104,7 +91,6 @@
                             <p class="text-gray-500 text-sm mt-2">Gestionar usuarios</p>
                         </div>
                     </a>
-
                 </div>
             </div>
 

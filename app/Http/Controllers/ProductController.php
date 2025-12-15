@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->get();
+        $query = Product::with('category');
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('barcode', 'LIKE', "%{$search}%");
+            });
+        }
+        $products = $query->latest()->get();
+
         return view('products.index', compact('products'));
     }
 
@@ -24,26 +33,14 @@ class ProductController extends Controller
     {
         // 1. Reglas de Validación Personalizadas
         $rules = [
-            // Barcode: Exactamente 12 dígitos
             'barcode' => ['required', 'numeric', 'digits:12', 'unique:products,barcode'],
-            
-            // Nombre: Mínimo 3, Máximo 20 caracteres
             'name'    => ['required', 'string', 'min:3', 'max:20'],
-            
-            // Categoría: Obligatoria
             'category_id'=> ['required', 'exists:categories,id'],
-            
-            // Precio: Numérico, Positivo, Máximo 99999 (5 dígitos enteros)
             'price'   => ['required', 'numeric', 'min:0', 'max:99999'],
-            
-            // Stock: Entero, Mínimo 0, Máximo 1000
             'stock'   => ['required', 'integer', 'min:0', 'max:1000'],
-            
-            // Fecha: Obligatoria y debe ser futura (para evitar vender caducados de entrada)
             'expiration_date' => ['required', 'date', 'after:today'],
         ];
 
-        // 2. Mensajes de Error en Español
         $messages = [
             'barcode.digits' => 'El código debe tener exactamente 12 dígitos.',
             'barcode.unique' => 'Este código de barras ya está registrado.',
@@ -79,14 +76,13 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Reglas para Actualizar (similares, pero ignorando ID propio en barcode y sin after:today en fecha)
         $rules = [
             'barcode' => ['required', 'numeric', 'digits:12', 'unique:products,barcode,'.$id],
             'name'    => ['required', 'string', 'min:3', 'max:20'],
             'category_id'=> ['required', 'exists:categories,id'],
             'price'   => ['required', 'numeric', 'min:0', 'max:99999'],
             'stock'   => ['required', 'integer', 'min:0', 'max:1000'],
-            'expiration_date' => ['required', 'date'], // Obligatoria, pero permitimos fechas pasadas al editar
+            'expiration_date' => ['required', 'date', 'after:today'],
         ];
 
         $messages = [
@@ -95,6 +91,7 @@ class ProductController extends Controller
             'stock.max'      => 'El stock máximo es 1000.',
             'category_id.required' => 'La categoría es obligatoria.',
             'expiration_date.required' => 'La fecha de caducidad es obligatoria.',
+            'expiration_date.after' => 'La fecha de caducidad debe ser posterior a hoy.',
         ];
 
         $request->validate($rules, $messages);

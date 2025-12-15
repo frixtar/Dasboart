@@ -10,7 +10,10 @@ class DatabaseSeeder extends Seeder
     {
         // Aquí registramos el orden en que queremos crear los datos
         $this->call([
-            AdminUserSeeder::class
+            AdminUserSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
+            
         ]);
     }
 }

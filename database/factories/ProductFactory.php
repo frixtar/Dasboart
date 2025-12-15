@@ -3,23 +3,43 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Category;
 
 class ProductFactory extends Factory
 {
     public function definition(): array
     {
+        // 1. Intentar obtener una categoría existente al azar
+        $category = Category::inRandomOrder()->first();
+
+        // Si no hay categorías (por si borraste la tabla), crear una de emergencia
+        if (!$category) {
+            $category = Category::create([
+                'name' => 'General', 
+                'description' => 'Categoría por defecto'
+            ]);
+        }
+
         return [
-            // Genera un código de barras aleatorio de 13 dígitos
-            'barcode' => $this->faker->unique()->numerify('#############'),
+            // Código de barras de 12 dígitos (750 es el prefijo común en México)
+            'barcode' => $this->faker->unique()->numerify('750#########'),
             
-            // Genera nombres de productos de 2 o 3 palabras con sufijos comerciales
-            'name' => ucfirst($this->faker->words(2, true)) . ' ' . $this->faker->randomElement(['500ml', '1kg', 'Grande', 'Pack 6', 'Clásico']),
+            // Nombre comercial realista
+            'name' => ucfirst($this->faker->word) . ' ' . 
+                      $this->faker->randomElement(['Clásico', 'Premium', 'Supremo', 'Fresco', 'Oferta']) . ' ' . 
+                      $this->faker->randomElement(['250g', '500ml', '1kg', '1L', 'Pack 6']),
             
-            // Precio aleatorio entre 10 y 500 pesos (2 decimales)
-            'price' => $this->faker->randomFloat(2, 10, 500),
+            // Relación con categoría
+            'category_id' => $category->id,
             
-            // Stock aleatorio entre 0 y 100
-            'stock' => $this->faker->numberBetween(0, 100),
+            // Precio entre $10 y $1,500
+            'price' => $this->faker->randomFloat(2, 10, 1500),
+            
+            // Stock (algunos en 0 para probar alertas)
+            'stock' => $this->faker->numberBetween(0, 150),
+            
+            // Fechas variadas (algunas vencidas, otras futuras)
+            'expiration_date' => $this->faker->dateTimeBetween('-1 month', '+2 years')->format('Y-m-d'),
             
             // 80% de probabilidad de tener IVA
             'has_iva' => $this->faker->boolean(80),
