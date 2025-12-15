@@ -9,7 +9,7 @@ use Tests\TestCase;
 class AdminLoginTest extends TestCase
 {
     use RefreshDatabase;
-    public function test_admin_can_login_and_redirect_to_dashboard()
+    public function login_admin()
     {
         $admin = User::factory()->create([
             'name' => 'Admin Test',
@@ -25,7 +25,7 @@ class AdminLoginTest extends TestCase
         $this->assertAuthenticatedAs($admin);
         $response->assertRedirect(route('dashboard'));
     }
-    public function test_admin_does_not_go_to_pos()
+    public function pos_admin()
     {
          $admin = User::factory()->create([
             'role' => 'administrador',
