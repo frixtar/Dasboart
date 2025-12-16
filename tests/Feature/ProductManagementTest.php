@@ -20,7 +20,6 @@ class ProductManagementTest extends TestCase
      */
     public function test_admin_can_create_product_with_full_details()
     {
-        // 1. Crear Admin y Categoría (CORREGIDO: Password fresco)
         $admin = User::factory()->create([
             'role' => 'administrador',
             'password' => bcrypt('password'), 

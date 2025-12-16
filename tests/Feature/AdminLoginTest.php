@@ -14,7 +14,7 @@ class AdminLoginTest extends TestCase
         $admin = User::factory()->create([
             'name' => 'Admin Test',
             'email' => 'admin@test.com',
-            'role' => 'administrador', // <--- Clave
+            'role' => 'administrador',
             'password' => bcrypt('password123'),
         ]);
 
@@ -29,7 +29,7 @@ class AdminLoginTest extends TestCase
     {
          $admin = User::factory()->create([
             'role' => 'administrador',
-            'password' => bcrypt('password'), // <--- Esto arregla el error de configuración
+            'password' => bcrypt('password'),
         ]);
 
         $response = $this->post('/login', [
