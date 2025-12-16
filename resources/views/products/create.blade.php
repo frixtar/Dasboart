@@ -13,18 +13,15 @@
                     <form action="{{ route('products.store') }}" method="POST">
                         @csrf
                         
-                        <!-- Código de Barras -->
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Código de Barras</label>
                             <input type="text" name="barcode" value="{{ old('barcode') }}"
                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500 @error('barcode') border-red-500 @enderror" 
                                    placeholder="Ej: 7501055310805" required>
-                            <!-- Ayuda Visual -->
                             <p class="text-xs text-gray-500 mt-1">🔢 Debe tener exactamente <strong>12 dígitos numéricos</strong>.</p>
                             @error('barcode') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Nombre -->
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Nombre del Producto</label>
                             <input type="text" name="name" value="{{ old('name') }}"
@@ -34,10 +31,7 @@
                             @error('name') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Grid para Precio y Stock -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            
-                            <!-- Precio -->
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Precio Venta ($)</label>
                                 <input type="number" step="0.01" name="price" value="{{ old('price') }}"
@@ -46,8 +40,6 @@
                                 <p class="text-xs text-gray-500 mt-1">💲 Solo números positivos.</p>
                                 @error('price') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                             </div>
-
-                            <!-- Stock -->
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Cantidad Inicial (Stock)</label>
                                 <input type="number" name="stock" value="{{ old('stock') }}"
@@ -73,6 +65,23 @@
                             
                             <a href="{{ route('categories.create') }}" class="text-xs text-blue-600 hover:underline mt-1 inline-block">
                                 + Crear nueva categoría
+                            </a>
+                            @error('category_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Proveedor</label>
+                            
+                            <select name="supplier_id" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                                <option value="" disabled selected>Selecciona una opción...</option>
+                                @foreach($suppliers as $supplier)
+                                    <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                        {{ $supplier->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            
+                            <a href="{{ route('suppliers.create') }}" class="text-xs text-blue-600 hover:underline mt-1 inline-block">
+                                + Crear nuevo proveedor
                             </a>
                             @error('category_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>

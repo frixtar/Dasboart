@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController; // Controlador de Categorías
 use App\Http\Controllers\POSController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SupplierController;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -39,5 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
     Route::get('/sales/{sale}/ticket', [SaleController::class, 'ticket'])->name('sales.ticket');
 });
+Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
 
 require __DIR__.'/auth.php';

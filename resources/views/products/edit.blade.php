@@ -14,8 +14,6 @@
                     @method('PUT')
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                        <!-- COLUMNA IZQUIERDA -->
                         <div class="space-y-4">
                             <!-- Código de Barras -->
                             <div>
@@ -34,8 +32,6 @@
                                 <p class="text-xs text-gray-500 mt-1">🔤 Inicia con letras.</p>
                                 @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
-
-                            <!-- Categoría -->
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Categoría</label>
                                 <select name="category_id" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
@@ -48,9 +44,19 @@
                                 </select>
                                 @error('category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Proveedor</label>
+                                <select name="supplier_id" class="w-full rounded border-gray-300 focus:border-blue-500 focus:ring-blue-500" required>
+                                    @foreach($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}" 
+                                            {{ (old('supplier_id', $product->supplier_id) == $supplier->id) ? 'selected' : '' }}>
+                                            {{ $supplier->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('supplier_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            </div>
                         </div>
-
-                        <!-- COLUMNA DERECHA -->
                         <div class="space-y-4">
                             <div class="grid grid-cols-2 gap-4">
                                 <!-- Precio -->
@@ -61,8 +67,6 @@
                                     <p class="text-xs text-gray-500 mt-1">💲 Positivo.</p>
                                     @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
-
-                                <!-- Stock -->
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Stock Actual</label>
                                     <input type="number" name="stock" value="{{ old('stock', $product->stock) }}"
@@ -71,8 +75,6 @@
                                     @error('stock') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                 </div>
                             </div>
-
-                            <!-- Fecha de Caducidad (FALTABA ESTO) -->
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Fecha de Caducidad</label>
                                 <input type="date" name="expiration_date" 
@@ -90,10 +92,7 @@
                                 </label>
                             </div>
                         </div>
-
                     </div>
-
-                    <!-- Botones -->
                     <div class="mt-8 flex justify-end pt-4 border-t border-gray-100 gap-4">
                         <a href="{{ route('products.index') }}" class="bg-gray-100 text-gray-700 font-bold py-2 px-6 rounded hover:bg-gray-200 transition">
                             Cancelar
@@ -102,9 +101,7 @@
                             Actualizar Producto
                         </button>
                     </div>
-
                 </form>
-
             </div>
         </div>
     </div>

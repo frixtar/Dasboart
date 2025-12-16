@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Supplier; // Mantenemos la importación de Proveedores
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category');
+        $query = Product::with(['category', 'supplier']);
+
+        // Tu lógica de búsqueda
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -18,7 +21,7 @@ class ProductController extends Controller
                   ->orWhere('barcode', 'LIKE', "%{$search}%");
             });
         }
-        $products = $query->latest()->get();
+        $products = $query->latest()->paginate(50);
 
         return view('products.index', compact('products'));
     }
@@ -26,16 +29,18 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('products.create', compact('categories'));
+        $suppliers = Supplier::all(); // Necesario para el selector de proveedores
+        return view('products.create', compact('categories', 'suppliers'));
     }
 
     public function store(Request $request)
     {
-        // 1. Reglas de Validación Personalizadas
+        // 1. Reglas de Validación Personalizadas (Fusionadas)
         $rules = [
             'barcode' => ['required', 'numeric', 'digits:12', 'unique:products,barcode'],
             'name'    => ['required', 'string', 'min:3', 'max:20'],
             'category_id'=> ['required', 'exists:categories,id'],
+            'supplier_id' => ['nullable', 'exists:suppliers,id'], // Mantenemos validación de proveedor
             'price'   => ['required', 'numeric', 'min:0', 'max:99999'],
             'stock'   => ['required', 'integer', 'min:0', 'max:1000'],
             'expiration_date' => ['required', 'date', 'after:today'],
@@ -62,24 +67,29 @@ class ProductController extends Controller
 
         $request->validate($rules, $messages);
 
-        Product::create($request->all());
+        // Preparamos los datos incluyendo el checkbox de IVA
+        $data = $request->all();
+        $data['has_iva'] = $request->has('has_iva');
+
+        Product::create($data);
 
         return redirect()->route('products.index')->with('success', 'Producto guardado exitosamente.');
     }
 
-    public function edit($id)
+    public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
         $categories = Category::all();
-        return view('products.edit', compact('product', 'categories'));
+        $suppliers = Supplier::all(); // Necesario para el selector en edit
+        return view('products.edit', compact('product', 'categories', 'suppliers'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
         $rules = [
-            'barcode' => ['required', 'numeric', 'digits:12', 'unique:products,barcode,'.$id],
+            'barcode' => ['required', 'numeric', 'digits:12', 'unique:products,barcode,'.$product->id],
             'name'    => ['required', 'string', 'min:3', 'max:20'],
             'category_id'=> ['required', 'exists:categories,id'],
+            'supplier_id' => ['nullable', 'exists:suppliers,id'],
             'price'   => ['required', 'numeric', 'min:0', 'max:99999'],
             'stock'   => ['required', 'integer', 'min:0', 'max:1000'],
             'expiration_date' => ['required', 'date', 'after:today'],
@@ -96,12 +106,11 @@ class ProductController extends Controller
 
         $request->validate($rules, $messages);
 
-        $product = Product::findOrFail($id);
-        
         $product->update([
             'barcode' => $request->barcode,
             'name'    => $request->name,
             'category_id'=> $request->category_id,
+            'supplier_id'=> $request->supplier_id,
             'price'   => $request->price,
             'stock'   => $request->stock,
             'expiration_date' => $request->expiration_date,
@@ -111,12 +120,14 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Producto actualizado.');
     }
 
-    public function destroy($id)
+    public function destroy(Product $product)
     {
+        // Tu lógica de permisos
         if (!auth()->user()->can_delete_products && auth()->user()->role !== 'administrador') {
             abort(403, 'No tienes permisos para eliminar.');
         }
-        Product::findOrFail($id)->delete();
+        
+        $product->delete();
         return redirect()->route('products.index')->with('success', 'Producto eliminado.');
     }
 }

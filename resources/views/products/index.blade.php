@@ -20,9 +20,12 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                                 Categorías
                             </a>
+                            <a href="{{ route('suppliers.index') }}" class="bg-white border border-gray-300 text-gray-700 font-bold py-2 px-4 rounded hover:bg-gray-50 transition shadow flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m3 4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                Proveedores
+                            </a>
                         </div>
 
-                        <!-- Derecha: BUSCADOR -->
                         <form action="{{ route('products.index') }}" method="GET" class="flex w-full md:w-auto">
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -32,7 +35,7 @@
                                        class="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm" 
                                        placeholder="Buscar por nombre o código...">
                             </div>
-                            <!-- Botón "X" para limpiar búsqueda (solo si hay búsqueda activa) -->
+                            <!-- Botón "X" para limpiar búsqueda -->
                             @if(request('search'))
                                 <a href="{{ route('products.index') }}" class="ml-2 bg-gray-200 text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-300 flex items-center" title="Limpiar filtro">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -42,7 +45,6 @@
                         
                     </div>
 
-                    <!-- Mensaje si no hay resultados de búsqueda -->
                     @if($products->isEmpty() && request('search'))
                         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
                             <div class="flex">
@@ -66,8 +68,10 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Código / Categoría</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Código</th>
                                     <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nombre</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Categoría</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Proveedor</th>
                                     <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Precio</th>
                                     <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Stock</th>
                                     <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Caducidad</th>
@@ -77,16 +81,9 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach ($products as $product)
                                 <tr class="hover:bg-gray-50 transition">
-                                    <!-- Columna 1: Código y Categoría -->
+                                    <!-- Columna 1: Código -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-bold text-gray-900">{{ $product->barcode }}</div>
-                                        @if($product->category)
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mt-1">
-                                                {{ $product->category->name }}
-                                            </span>
-                                        @else
-                                            <span class="text-xs text-gray-400 italic mt-1 block">Sin categoría</span>
-                                        @endif
                                     </td>
 
                                     <!-- Columna 2: Nombre e IVA -->
@@ -97,12 +94,30 @@
                                         @endif
                                     </td>
 
-                                    <!-- Columna 3: Precio -->
+                                    <!-- Columna 3: Categoría -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($product->category)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                {{ $product->category->name }}
+                                            </span>
+                                        @else
+                                            <span class="text-xs text-gray-400 italic">Sin categoría</span>
+                                        @endif
+                                    </td>
+
+                                    <!-- Columna 4: Proveedor -->
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-600">
+                                            {{ $product->supplier->name ?? 'N/A' }}
+                                        </div>
+                                    </td>
+
+                                    <!-- Columna 5: Precio -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-blue-600 font-bold">${{ number_format($product->price, 2) }}</div>
                                     </td>
 
-                                    <!-- Columna 4: Stock -->
+                                    <!-- Columna 6: Stock -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($product->stock <= 5)
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 animate-pulse">
@@ -113,7 +128,7 @@
                                         @endif
                                     </td>
 
-                                    <!-- Columna 5: Caducidad -->
+                                    <!-- Columna 7: Caducidad -->
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         @if($product->expiration_date)
                                             @php
@@ -132,7 +147,7 @@
                                         @endif
                                     </td>
 
-                                    <!-- Columna 6: Acciones -->
+                                    <!-- Columna 8: Acciones -->
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
                                             <a href="{{ route('products.edit', $product->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 p-2 rounded-lg transition" title="Editar">
